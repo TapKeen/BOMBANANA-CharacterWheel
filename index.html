@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOMBANANA! 角色转盘</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Zcool+KuaiLe&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #2d1b4e 0%, #1a0f2e 50%, #0d0618 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Zcool KuaiLe', 'Microsoft YaHei', sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* 背景装饰 */
+        body::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,200,0,0.05) 0%, transparent 50%);
+            animation: rotate 30s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .title {
+            font-size: 3rem;
+            color: #ffd700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5), 0 4px 8px rgba(0,0,0,0.8);
+            margin-bottom: 10px;
+            z-index: 10;
+            letter-spacing: 4px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #ff8c00;
+            margin-bottom: 30px;
+            z-index: 10;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .wheel-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            z-index: 10;
+        }
+
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: relative;
+            transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.3), 0 0 100px rgba(255, 140, 0, 0.1);
+            border: 8px solid #ffd700;
+        }
+
+        .wheel-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, #ffd700 0%, #ff8c00 100%);
+            border-radius: 50%;
+            z-index: 20;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .wheel-center::after {
+            content: '🍌';
+        }
+
+        /* 指针 */
+        .pointer {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-top: 40px solid #ff4444;
+            z-index: 30;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
+        }
+
+        .pointer::after {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: -8px;
+            width: 16px;
+            height: 16px;
+            background: #ff4444;
+            border-radius: 50%;
+        }
+
+        .spin-btn {
+            margin-top: 40px;
+            padding: 16px 60px;
+            font-size: 1.8rem;
+            font-family: 'Zcool KuaiLe', 'Microsoft YaHei', sans-serif;
+            color: #fff;
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4), 0 0 30px rgba(255, 215, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 10;
+            letter-spacing: 4px;
+        }
+
+        .spin-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.6), 0 0 40px rgba(255, 215, 0, 0.3);
+        }
+
+        .spin-btn:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .spin-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result {
+            margin-top: 30px;
+            font-size: 2rem;
+            color: #ffd700;
+            text-align: center;
+            z-index: 10;
+            min-height: 80px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .result.show {
+            opacity: 1;
+        }
+
+        .result .role-name {
+            font-size: 2.5rem;
+            color: #ff6b35;
+            display: block;
+            margin-top: 10px;
+            text-shadow: 0 0 20px rgba(255, 107, 53, 0.5);
+        }
+
+        .role-info {
+            margin-top: 10px;
+            font-size: 1rem;
+            color: #ccc;
+            max-width: 500px;
+            line-height: 1.6;
+        }
+
+        /* 猴子图标装饰 */
+        .monkey-decoration {
+            position: absolute;
+            font-size: 3rem;
+            opacity: 0.15;
+            z-index: 1;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .monkey-1 { top: 10%; left: 10%; animation-delay: 0s; }
+        .monkey-2 { top: 20%; right: 10%; animation-delay: 2s; }
+        .monkey-3 { bottom: 15%; left: 15%; animation-delay: 4s; }
+        .monkey-4 { bottom: 20%; right: 15%; animation-delay: 1s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+
+        /* 粒子效果 */
+        .particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #ffd700;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        @keyframes particle-burst {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--tx), var(--ty)) scale(0);
+            }
+        }
+
+        /* 角色卡片预览 */
+        .roles-preview {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+            z-index: 10;
+        }
+
+        .role-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            width: 120px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .role-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 215, 0, 0.5);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.1);
+        }
+
+        .role-icon {
+            font-size: 3rem;
+            margin-bottom: 8px;
+        }
+
+        .role-card-title {
+            color: #ffd700;
+            font-size: 1rem;
+        }
+
+        .role-card-desc {
+            color: #aaa;
+            font-size: 0.75rem;
+            margin-top: 4px;
+        }
+
+        @media (max-width: 600px) {
+            .title { font-size: 2rem; }
+            .wheel-container { width: 300px; height: 300px; }
+            .roles-preview { flex-wrap: wrap; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="monkey-decoration monkey-1">🐵</div>
+    <div class="monkey-decoration monkey-2">🙈</div>
+    <div class="monkey-decoration monkey-3">🙉</div>
+    <div class="monkey-decoration monkey-4">🙊</div>
+
+    <h1 class="title">🍌 BOMBANANA! 🍌</h1>
+    <p class="subtitle">三只猴子，一颗炸弹，合作求生！</p>
+
+    <div class="wheel-container">
+        <div class="pointer"></div>
+        <canvas id="wheel" class="wheel" width="400" height="400"></canvas>
+        <div class="wheel-center"></div>
+    </div>
+
+    <button class="spin-btn" id="spinBtn" onclick="spin()">开始抽奖</button>
+
+    <div class="result" id="result"></div>
+
+    <div class="roles-preview">
+        <div class="role-card">
+            <div class="role-icon">🙈</div>
+            <div class="role-card-title">瞎子</div>
+            <div class="role-card-desc">看不见但会说话</div>
+        </div>
+        <div class="role-card">
+            <div class="role-icon">🙉</div>
+            <div class="role-card-title">聋子</div>
+            <div class="role-card-desc">听不见但看得见</div>
+        </div>
+        <div class="role-card">
+            <div class="role-icon">🙊</div>
+            <div class="role-card-title">哑巴</div>
+            <div class="role-card-desc">说不出但听得见</div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('wheel');
+        const ctx = canvas.getContext('2d');
+        const spinBtn = document.getElementById('spinBtn');
+        const resultDiv = document.getElementById('result');
+
+        const roles = [
+            {
+                name: '瞎子',
+                emoji: '🙈',
+                color: '#6b2c91',
+                colorLight: '#9b4fd1',
+                desc: '你看不见炸弹，但你可以说话！依靠队友的指引来拆弹吧！',
+                angle: 0
+            },
+            {
+                name: '聋子',
+                emoji: '🙉',
+                color: '#2c5f91',
+                colorLight: '#4f8fd1',
+                desc: '你听不见声音，但你能看见！观察炸弹并把信息传达给队友！',
+                angle: 120
+            },
+            {
+                name: '哑巴',
+                emoji: '🙊',
+                color: '#2c9144',
+                colorLight: '#4fd16b',
+                desc: '你说不出话，但你能听见！仔细聆听并用手势帮助队友！',
+                angle: 240
+            }
+        ];
+
+        let currentRotation = 0;
+        let isSpinning = false;
+
+        function drawWheel() {
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = canvas.width / 2 - 8;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 绘制三个扇区
+            roles.forEach((role, index) => {
+                const startAngle = (role.angle * Math.PI) / 180;
+                const endAngle = ((role.angle + 120) * Math.PI) / 180;
+
+                // 扇区背景
+                const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
+                gradient.addColorStop(0, role.colorLight);
+                gradient.addColorStop(1, role.color);
+
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+                ctx.closePath();
+                ctx.fillStyle = gradient;
+                ctx.fill();
+
+                // 边框线
+                ctx.strokeStyle = '#ffd700';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+
+                // 绘制文字和图标
+                const textAngle = startAngle + (endAngle - startAngle) / 2;
+                const textRadius = radius * 0.55;
+                const textX = centerX + Math.cos(textAngle) * textRadius;
+                const textY = centerY + Math.sin(textAngle) * textRadius;
+
+                ctx.save();
+                ctx.translate(textX, textY);
+                ctx.rotate(textAngle + Math.PI / 2);
+
+                // 表情
+                ctx.font = '60px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(role.emoji, 0, -25);
+
+                // 名称
+                ctx.font = 'bold 28px "Zcool KuaiLe", "Microsoft YaHei", sans-serif';
+                ctx.fillStyle = '#fff';
+                ctx.shadowColor = 'rgba(0,0,0,0.5)';
+                ctx.shadowBlur = 4;
+                ctx.fillText(role.name, 0, 25);
+
+                ctx.restore();
+            });
+
+            // 外圈装饰
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+            ctx.strokeStyle = '#ffd700';
+            ctx.lineWidth = 4;
+            ctx.stroke();
+        }
+
+        function spin() {
+            if (isSpinning) return;
+
+            isSpinning = true;
+            spinBtn.disabled = true;
+            spinBtn.textContent = '转盘转动中...';
+            resultDiv.classList.remove('show');
+
+            // 随机旋转角度（至少转3圈）
+            const minSpins = 3;
+            const randomAngle = Math.random() * 360;
+            const totalRotation = minSpins * 360 + randomAngle;
+            currentRotation += totalRotation;
+
+            canvas.style.transform = `rotate(${currentRotation}deg)`;
+
+            setTimeout(() => {
+                // 计算最终停在哪个角色（指针在上方，对应角度需要调整）
+                const finalAngle = (360 - (currentRotation % 360)) % 360;
+                let selectedRole;
+
+                if (finalAngle >= 0 && finalAngle < 120) {
+                    selectedRole = roles[0]; // 瞎子
+                } else if (finalAngle >= 120 && finalAngle < 240) {
+                    selectedRole = roles[1]; // 聋子
+                } else {
+                    selectedRole = roles[2]; // 哑巴
+                }
+
+                showResult(selectedRole);
+                createParticles();
+
+                isSpinning = false;
+                spinBtn.disabled = false;
+                spinBtn.textContent = '再抽一次';
+            }, 4000);
+        }
+
+        function showResult(role) {
+            resultDiv.innerHTML = `
+                <div>你抽到了角色：</div>
+                <span class="role-name">${role.emoji} ${role.name} ${role.emoji}</span>
+                <div class="role-info">${role.desc}</div>
+            `;
+            resultDiv.classList.add('show');
+        }
+
+        function createParticles() {
+            const colors = ['#ffd700', '#ff6b35', '#ff4444', '#4fd16b', '#4f8fd1'];
+            const container = document.body;
+            const rect = spinBtn.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = centerX + 'px';
+                particle.style.top = centerY + 'px';
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.width = (4 + Math.random() * 6) + 'px';
+                particle.style.height = particle.style.width;
+
+                const angle = (Math.PI * 2 * i) / 50;
+                const distance = 100 + Math.random() * 200;
+                particle.style.setProperty('--tx', Math.cos(angle) * distance + 'px');
+                particle.style.setProperty('--ty', Math.sin(angle) * distance + 'px');
+                particle.style.animation = `particle-burst 1s ease-out forwards`;
+
+                container.appendChild(particle);
+
+                setTimeout(() => particle.remove(), 1000);
+            }
+        }
+
+        // 初始化绘制
+        drawWheel();
+    </script>
+</body>
+</html>
