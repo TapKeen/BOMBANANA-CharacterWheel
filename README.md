@@ -2,7 +2,10 @@
 
 一个为 **BOMBANANA!** 游戏设计的角色抽取转盘工具。三只猴子，一颗炸弹，合作求生！
 
-> [🇨🇳 中文说明](#中文说明) | [🇬🇧 English](#english)
+<p align="center">
+  <a href="#中文说明" style="display:inline-block;padding:8px 20px;background:#4CAF50;color:#fff;text-decoration:none;border-radius:6px;margin:0 6px;font-weight:bold;">🇨🇳 中文说明</a>
+  <a href="#english" style="display:inline-block;padding:8px 20px;background:#4CAF50;color:#fff;text-decoration:none;border-radius:6px;margin:0 6px;font-weight:bold;">🇬🇧 English</a>
+</p>
 
 ---
 
@@ -23,6 +26,7 @@ BOMBANANA! 是一款合作拆弹游戏。三只猴子各有不同的感官缺陷
 - 随机抽取一个角色供玩家游玩
 - 炫酷的转盘旋转动画
 - 粒子特效庆祝
+- **支持中英文切换 (CN/EN)**
 - 纯前端实现，无需服务器
 
 ### 📸 效果预览
@@ -47,9 +51,10 @@ BOMBANANA! 是一款合作拆弹游戏。三只猴子各有不同的感官缺陷
 ### 📋 使用方法
 
 1. 打开 [在线链接](https://tapkeen.github.io/BOMBANANA-CharacterWheel/)
-2. 点击 **「开始抽奖」** 按钮
-3. 等待转盘停下，查看抽到的角色
-4. 点击 **「再抽一次」** 可重新抽取
+2. 点击右上角 **CN / EN** 切换语言
+3. 点击 **「开始抽奖」** 按钮
+4. 等待转盘停下，查看抽到的角色
+5. 点击 **「再抽一次」** 可重新抽取
 
 ---
 
@@ -70,6 +75,7 @@ BOMBANANA! is a cooperative bomb-defusal game. Three monkeys each have a differe
 - Randomly select a character for each player
 - Spinning wheel animation with easing
 - Particle burst celebration effect
+- **Chinese / English language switch (CN/EN)**
 - Pure frontend — no server required
 
 ### 📸 Preview
@@ -94,9 +100,10 @@ BOMBANANA! is a cooperative bomb-defusal game. Three monkeys each have a differe
 ### 📋 How to Use
 
 1. Open the [live link](https://tapkeen.github.io/BOMBANANA-CharacterWheel/)
-2. Click the **「开始抽奖」** (Spin) button
-3. Wait for the wheel to stop and see your character
-4. Click **「再抽一次」** to spin again
+2. Click **CN / EN** in the top-right to switch language
+3. Click the **「开始抽奖」** (Spin) button
+4. Wait for the wheel to stop and see your character
+5. Click **「再抽一次」** to spin again
 
 ---
 

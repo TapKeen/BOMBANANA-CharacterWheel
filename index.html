@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BOMBANANA! 角色转盘</title>
+    <title>BOMBANANA! Character Wheel</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Zcool+KuaiLe&display=swap');
 
@@ -42,6 +42,37 @@
             to { transform: rotate(360deg); }
         }
 
+        .lang-switch {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            display: flex;
+            gap: 8px;
+        }
+
+        .lang-switch button {
+            padding: 6px 16px;
+            font-family: 'Zcool KuaiLe', 'Microsoft YaHei', sans-serif;
+            font-size: 0.9rem;
+            border: 2px solid #ffd700;
+            background: transparent;
+            color: #ffd700;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .lang-switch button.active {
+            background: #ffd700;
+            color: #2d1b4e;
+            font-weight: bold;
+        }
+
+        .lang-switch button:hover {
+            background: rgba(255, 215, 0, 0.2);
+        }
+
         .title {
             font-size: 3rem;
             color: #ffd700;
@@ -60,7 +91,7 @@
         .subtitle {
             font-size: 1.2rem;
             color: #ff8c00;
-            margin-bottom: 30px;
+            margin-bottom: 50px;
             z-index: 10;
             text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
@@ -70,6 +101,7 @@
             width: 400px;
             height: 400px;
             z-index: 10;
+            margin-top: 20px;
         }
 
         .wheel {
@@ -106,7 +138,7 @@
         /* 指针 */
         .pointer {
             position: absolute;
-            top: -30px;
+            top: -60px;
             left: 50%;
             transform: translateX(-50%);
             width: 0;
@@ -278,6 +310,8 @@
             .title { font-size: 2rem; }
             .wheel-container { width: 300px; height: 300px; }
             .roles-preview { flex-wrap: wrap; justify-content: center; }
+            .lang-switch { top: 10px; right: 10px; }
+            .lang-switch button { padding: 4px 10px; font-size: 0.8rem; }
         }
     </style>
 </head>
@@ -287,8 +321,13 @@
     <div class="monkey-decoration monkey-3">🙉</div>
     <div class="monkey-decoration monkey-4">🙊</div>
 
+    <div class="lang-switch">
+        <button id="btnZh" class="active" onclick="switchLang('zh')">CN</button>
+        <button id="btnEn" onclick="switchLang('en')">EN</button>
+    </div>
+
     <h1 class="title">🍌 BOMBANANA! 🍌</h1>
-    <p class="subtitle">三只猴子，一颗炸弹，合作求生！</p>
+    <p class="subtitle" id="subtitle">三只猴子，一颗炸弹，合作求生！</p>
 
     <div class="wheel-container">
         <div class="pointer"></div>
@@ -303,18 +342,18 @@
     <div class="roles-preview">
         <div class="role-card">
             <div class="role-icon">🙈</div>
-            <div class="role-card-title">瞎子</div>
-            <div class="role-card-desc">看不见但会说话</div>
+            <div class="role-card-title" id="cardTitle0">瞎子</div>
+            <div class="role-card-desc" id="cardDesc0">看不见但会说话</div>
         </div>
         <div class="role-card">
             <div class="role-icon">🙉</div>
-            <div class="role-card-title">聋子</div>
-            <div class="role-card-desc">听不见但看得见</div>
+            <div class="role-card-title" id="cardTitle1">聋子</div>
+            <div class="role-card-desc" id="cardDesc1">听不见但看得见</div>
         </div>
         <div class="role-card">
             <div class="role-icon">🙊</div>
-            <div class="role-card-title">哑巴</div>
-            <div class="role-card-desc">说不出但听得见</div>
+            <div class="role-card-title" id="cardTitle2">哑巴</div>
+            <div class="role-card-desc" id="cardDesc2">说不出但听得见</div>
         </div>
     </div>
 
@@ -324,35 +363,63 @@
         const spinBtn = document.getElementById('spinBtn');
         const resultDiv = document.getElementById('result');
 
-        const roles = [
-            {
-                name: '瞎子',
-                emoji: '🙈',
-                color: '#6b2c91',
-                colorLight: '#9b4fd1',
-                desc: '你看不见炸弹，但你可以说话！依靠队友的指引来拆弹吧！',
-                angle: 0
+        const i18n = {
+            zh: {
+                subtitle: '三只猴子，一颗炸弹，合作求生！',
+                spin: '开始抽奖',
+                spinning: '转盘转动中...',
+                spinAgain: '再抽一次',
+                resultPrefix: '你抽到了角色：',
+                roles: [
+                    { name: '瞎子', desc: '你看不见炸弹，但你可以说话！依靠队友的指引来拆弹吧！', cardTitle: '瞎子', cardDesc: '看不见但会说话' },
+                    { name: '聋子', desc: '你听不见声音，但你能看见！观察炸弹并把信息传达给队友！', cardTitle: '聋子', cardDesc: '听不见但看得见' },
+                    { name: '哑巴', desc: '你说不出话，但你能听见！仔细聆听并用手势帮助队友！', cardTitle: '哑巴', cardDesc: '说不出但听得见' }
+                ]
             },
-            {
-                name: '聋子',
-                emoji: '🙉',
-                color: '#2c5f91',
-                colorLight: '#4f8fd1',
-                desc: '你听不见声音，但你能看见！观察炸弹并把信息传达给队友！',
-                angle: 120
-            },
-            {
-                name: '哑巴',
-                emoji: '🙊',
-                color: '#2c9144',
-                colorLight: '#4fd16b',
-                desc: '你说不出话，但你能听见！仔细聆听并用手势帮助队友！',
-                angle: 240
+            en: {
+                subtitle: 'Three monkeys, one bomb, teamwork for survival!',
+                spin: 'Spin',
+                spinning: 'Spinning...',
+                spinAgain: 'Spin Again',
+                resultPrefix: 'You got:',
+                roles: [
+                    { name: 'The Blind', desc: "You cannot see the bomb, but you can speak! Rely on your teammates' guidance to defuse it!", cardTitle: 'Blind', cardDesc: 'Cannot see but can speak' },
+                    { name: 'The Deaf', desc: 'You cannot hear sounds, but you can see! Observe the bomb and relay information to your teammates!', cardTitle: 'Deaf', cardDesc: 'Cannot hear but can see' },
+                    { name: 'The Mute', desc: 'You cannot speak, but you can hear! Listen carefully and help your teammates with gestures!', cardTitle: 'Mute', cardDesc: 'Cannot speak but can hear' }
+                ]
             }
-        ];
+        };
 
+        let currentLang = 'zh';
         let currentRotation = 0;
         let isSpinning = false;
+        let lastSelectedRoleIndex = -1;
+
+        const roles = [
+            { emoji: '🙈', color: '#6b2c91', colorLight: '#9b4fd1', angle: 0 },
+            { emoji: '🙉', color: '#2c5f91', colorLight: '#4f8fd1', angle: 120 },
+            { emoji: '🙊', color: '#2c9144', colorLight: '#4fd16b', angle: 240 }
+        ];
+
+        function switchLang(lang) {
+            currentLang = lang;
+            document.getElementById('btnZh').classList.toggle('active', lang === 'zh');
+            document.getElementById('btnEn').classList.toggle('active', lang === 'en');
+
+            const t = i18n[lang];
+            document.getElementById('subtitle').textContent = t.subtitle;
+            if (!isSpinning) {
+                spinBtn.textContent = lastSelectedRoleIndex >= 0 ? t.spinAgain : t.spin;
+            }
+            for (let i = 0; i < 3; i++) {
+                document.getElementById('cardTitle' + i).textContent = t.roles[i].cardTitle;
+                document.getElementById('cardDesc' + i).textContent = t.roles[i].cardDesc;
+            }
+            drawWheel();
+            if (lastSelectedRoleIndex >= 0) {
+                showResult(lastSelectedRoleIndex);
+            }
+        }
 
         function drawWheel() {
             const centerX = canvas.width / 2;
@@ -361,12 +428,10 @@
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // 绘制三个扇区
             roles.forEach((role, index) => {
                 const startAngle = (role.angle * Math.PI) / 180;
                 const endAngle = ((role.angle + 120) * Math.PI) / 180;
 
-                // 扇区背景
                 const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
                 gradient.addColorStop(0, role.colorLight);
                 gradient.addColorStop(1, role.color);
@@ -378,12 +443,10 @@
                 ctx.fillStyle = gradient;
                 ctx.fill();
 
-                // 边框线
                 ctx.strokeStyle = '#ffd700';
                 ctx.lineWidth = 3;
                 ctx.stroke();
 
-                // 绘制文字和图标
                 const textAngle = startAngle + (endAngle - startAngle) / 2;
                 const textRadius = radius * 0.55;
                 const textX = centerX + Math.cos(textAngle) * textRadius;
@@ -393,23 +456,21 @@
                 ctx.translate(textX, textY);
                 ctx.rotate(textAngle + Math.PI / 2);
 
-                // 表情
                 ctx.font = '60px Arial';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 ctx.fillText(role.emoji, 0, -25);
 
-                // 名称
-                ctx.font = 'bold 28px "Zcool KuaiLe", "Microsoft YaHei", sans-serif';
+                const roleName = i18n[currentLang].roles[index].name;
+                ctx.font = 'bold 24px "Zcool KuaiLe", "Microsoft YaHei", sans-serif';
                 ctx.fillStyle = '#fff';
                 ctx.shadowColor = 'rgba(0,0,0,0.5)';
                 ctx.shadowBlur = 4;
-                ctx.fillText(role.name, 0, 25);
+                ctx.fillText(roleName, 0, 25);
 
                 ctx.restore();
             });
 
-            // 外圈装饰
             ctx.beginPath();
             ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
             ctx.strokeStyle = '#ffd700';
@@ -422,10 +483,10 @@
 
             isSpinning = true;
             spinBtn.disabled = true;
-            spinBtn.textContent = '转盘转动中...';
             resultDiv.classList.remove('show');
+            const t = i18n[currentLang];
+            spinBtn.textContent = t.spinning;
 
-            // 随机旋转角度（至少转3圈）
             const minSpins = 3;
             const randomAngle = Math.random() * 360;
             const totalRotation = minSpins * 360 + randomAngle;
@@ -434,32 +495,38 @@
             canvas.style.transform = `rotate(${currentRotation}deg)`;
 
             setTimeout(() => {
-                // 计算最终停在哪个角色（指针在上方，对应角度需要调整）
-                const finalAngle = (360 - (currentRotation % 360)) % 360;
-                let selectedRole;
+                // 指针在上方，对应 canvas 270°
+                // 转盘顺时针旋转了 currentRotation 度
+                // 指针指向的原始角度 = (270 - rotation) mod 360
+                const pointerTargetAngle = (270 - (currentRotation % 360) + 360) % 360;
+                let selectedIndex;
 
-                if (finalAngle >= 0 && finalAngle < 120) {
-                    selectedRole = roles[0]; // 瞎子
-                } else if (finalAngle >= 120 && finalAngle < 240) {
-                    selectedRole = roles[1]; // 聋子
+                if (pointerTargetAngle >= 0 && pointerTargetAngle < 120) {
+                    selectedIndex = 0; // 瞎子
+                } else if (pointerTargetAngle >= 120 && pointerTargetAngle < 240) {
+                    selectedIndex = 1; // 聋子
                 } else {
-                    selectedRole = roles[2]; // 哑巴
+                    selectedIndex = 2; // 哑巴
                 }
 
-                showResult(selectedRole);
+                lastSelectedRoleIndex = selectedIndex;
+                showResult(selectedIndex);
                 createParticles();
 
                 isSpinning = false;
                 spinBtn.disabled = false;
-                spinBtn.textContent = '再抽一次';
+                spinBtn.textContent = t.spinAgain;
             }, 4000);
         }
 
-        function showResult(role) {
+        function showResult(index) {
+            const t = i18n[currentLang];
+            const role = roles[index];
+            const roleData = t.roles[index];
             resultDiv.innerHTML = `
-                <div>你抽到了角色：</div>
-                <span class="role-name">${role.emoji} ${role.name} ${role.emoji}</span>
-                <div class="role-info">${role.desc}</div>
+                <div>${t.resultPrefix}</div>
+                <span class="role-name">${role.emoji} ${roleData.name} ${role.emoji}</span>
+                <div class="role-info">${roleData.desc}</div>
             `;
             resultDiv.classList.add('show');
         }
@@ -492,7 +559,6 @@
             }
         }
 
-        // 初始化绘制
         drawWheel();
     </script>
 </body>
