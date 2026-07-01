@@ -14,9 +14,9 @@ BOMBANANA! 是一款合作拆弹游戏。三只猴子各有不同的感官缺陷
 
 | 角色 | 特点 | 能力 |
 |------|------|------|
-| 🙈 **瞎子** | 看不见 | 可以说话，能将信息传达给队友 |
-| 🙉 **聋子** | 听不见 | 可以看见，能观察炸弹的状态 |
-| 🙊 **哑巴** | 说不出话 | 可以听见，能接收队友的信息 |
+| 🙈 **瞎子** | 看不见（黑屏+白轮廓） | 能说能听，接收聋子语音指令执行拆弹 |
+| 🙉 **聋子** | 听不见 | 能说能看见，观察炸弹告知哑巴，看手势后语音指挥瞎子 |
+| 🙊 **哑巴** | 说不出话 | 能看能听，听描述查手册，用手势告知聋子拆弹方法 |
 
 ### 🎰 转盘功能
 
@@ -63,9 +63,9 @@ BOMBANANA! is a cooperative bomb-defusal game. Three monkeys each have a differe
 
 | Character | Impairment | Ability |
 |-----------|-----------|----------|
-| 🙈 **The Blind** | Cannot see | Can speak and relay information |
-| 🙉 **The Deaf** | Cannot hear | Can see and observe the bomb |
-| 🙊 **The Mute** | Cannot speak | Can hear and receive information |
+| 🙈 **The Blind** | Cannot see (black screen + white outline) | Can speak & hear; follows the Deaf's verbal instructions to defuse |
+| 🙉 **The Deaf** | Cannot hear | Can speak & see; observes bomb, informs Mute, reads gestures, then verbally guides the Blind |
+| 🙊 **The Mute** | Cannot speak | Can see & hear; listens to the Deaf, checks manual, uses gestures to inform the Deaf |
 
 ### 🎰 Wheel Features
 
@@ -98,9 +98,9 @@ BOMBANANA! is a cooperative bomb-defusal game. Three monkeys each have a differe
 
 1. Open the [live link](https://tapkeen.github.io/BOMBANANA-CharacterWheel/)
 2. Click **CN / EN** in the top-right to switch language
-3. Click the **「开始抽奖」** (Spin) button
+3. Click the **Spin** button
 4. Wait for the wheel to stop and see your character
-5. Click **「再抽一次」** to spin again
+5. Click **Spin Again** to spin again
 
 ---
 
