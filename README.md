@@ -28,10 +28,10 @@ BOMBANANA! 是一款合作拆弹游戏。三只猴子各有不同的感官缺陷
 ### 📸 效果预览
 
 #### 转盘主界面
-![转盘主界面](screenshots/wheel-main.jpg)
+![转盘主界面](wheel-main.jpg)
 
 #### 抽奖结果
-![抽奖结果](screenshots/wheel-result.jpg)
+![抽奖结果](wheel-result.jpg)
 
 ### 🚀 在线体验
 
@@ -75,10 +75,10 @@ BOMBANANA! is a cooperative bomb-defusal game. Three monkeys each have a differe
 ### 📸 Preview
 
 #### Wheel Main Interface
-![Wheel Main Interface](screenshots/wheel-main.jpg)
+![Wheel Main Interface](wheel-main.jpg)
 
 #### Spin Result
-![Spin Result](screenshots/wheel-result.jpg)
+![Spin Result](wheel-result.jpg)
 
 ### 🚀 Live Demo
 
