@@ -2,10 +2,7 @@
 
 一个为 **BOMBANANA!** 游戏设计的角色抽取转盘工具。三只猴子，一颗炸弹，合作求生！
 
-<p align="center">
-  <a href="#中文说明"><img src="https://img.shields.io/badge/中文说明-4CAF50?style=for-the-badge&logoColor=white" alt="中文说明"></a>
-  <a href="#english"><img src="https://img.shields.io/badge/English-4CAF50?style=for-the-badge&logoColor=white" alt="English"></a>
-</p>
+> [🇨🇳 简体中文](#中文说明) | [🇬🇧 English](#english)
 
 ---
 
