@@ -59,6 +59,7 @@ BOMBANANA! is a cooperative bomb-defusal game. Three monkeys each have a differe
 - **Responsive Design**: Fully optimized layout for both mobile and desktop browsers
 - Wheel, pointer, buttons, and cards now auto-scale based on screen size
 - Fixed pointer overlapping with title text on mobile devices
+- Added bottom-left signature and version number
 
 ### V1.0 (2026-07-01)
 - Initial release
