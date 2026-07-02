@@ -104,6 +104,21 @@ BOMBANANA! is a cooperative bomb-defusal game. Three monkeys each have a differe
 
 ---
 
+## 📝 更新日志 / Changelog
+
+### V1.1 (2025-07-02)
+- **双端适配**：全面优化响应式布局，支持手机与电脑浏览器自适应显示
+- 转盘、指针、按钮、卡片等元素根据屏幕尺寸自动缩放
+- 修复手机端指针与标题文字重叠问题
+
+### V1.0
+- 初始版本发布
+- 基础转盘抽奖功能
+- 支持中英文语言切换
+- Canvas 绘制转盘 + CSS3 动画特效
+
+---
+
 ## 📜 License
 
 This project is open source. Feel free to use and modify it for your game nights!
